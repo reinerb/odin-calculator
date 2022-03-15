@@ -66,6 +66,11 @@ select {
   background-color: #161616;
 }
 
+.btn:active {
+  background-color: limegreen;
+  color: black;
+}
+
 .btn-clear,
 .btn-divide,
 .btn-times,
