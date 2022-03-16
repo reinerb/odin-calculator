@@ -24,6 +24,27 @@ const divide = function (a, b) {
   return b == 0 ? "ERROR" : parseInt(a) / parseInt(b);
 };
 
+// Peforms a two-operation calculation
+const calculate = function (a, b, operation) {
+  let result;
+
+  switch (operation) {
+    case "+":
+      result = add(a, b);
+      break;
+    case "-":
+      result = subtract(a, b);
+      break;
+    case "*":
+      result = multiply(a, b);
+      break;
+    case "/":
+      result = divide(a, b);
+  }
+
+  return String(result);
+};
+
 // Processing button presses
 function buttonPress(value) {
   // Reset when clear is pressed
