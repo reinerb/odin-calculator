@@ -1,7 +1,10 @@
 const calculatorWindow = document.querySelector(".calculator-window");
 
 // Initializing the window
-var windowContent = "0";
+let windowContent = "0";
+let firstOperand = "";
+let secondOperand = "";
+let operator = "";
 calculatorWindow.textContent = windowContent;
 
 // Operates a . b
@@ -21,23 +24,48 @@ const divide = function (a, b) {
   return b == 0 ? "ERROR" : parseInt(a) / parseInt(b);
 };
 
+// Processing button presses
+function buttonPress(value) {
+  // Reset when clear is pressed
+  if (value === "Delete" || value === "Backspace") {
+    windowContent = "0";
+    firstOperand = "";
+    secondOperand = "";
+    operator = "";
+    calculatorWindow.textContent = windowContent;
+    return;
+  }
+
+  // If there is an error, do nothing until cleared
+  if (windowContent === "ERROR") {
+    return;
+  }
+
+  // If the input is a number, append it to the window content.
+  // Replace leading zeros, if any.
+  if (value == "0") {
+    windowContent = windowContent === "0" ? "0" : windowContent + "0";
+  } else if (value >= 1 && value <= 9) {
+    windowContent = windowContent === "0" ? value : windowContent + value;
+  }
+  // If it's an operator, set up to perform an operation.
+  else if (value === "+" || value === "-" || value === "*" || value === "/") {
+    return;
+  }
+  // If equals is pressed, perform an operation if possible.
+  else if (value === "Enter") {
+    if (firstOperand !== "" && secondOperand !== "" && operator !== "") {
+      calculate(firstOperand, secondOperand, operator);
+    }
+  }
+
+  calculatorWindow.textContent = windowContent;
+}
+
 // Accepting keypresses
 window.addEventListener("keydown", onKeyDown, true);
 
 function onKeyDown(e) {
-  console.log(e.keyCode);
-  if (e.keyCode == 48 || e.keyCode == 96) {
-    windowContent = windowContent === "0" ? "0" : windowContent + "0";
-  } else if (e.keyCode >= 49 && e.keyCode <= 57) {
-    stringValue = String(e.keyCode - 48);
-    windowContent =
-      windowContent === "0" ? stringValue : windowContent + stringValue;
-  } else if (e.keyCode >= 97 && e.keyCode <= 105) {
-    stringValue = String(e.keyCode - 96);
-    windowContent =
-      windowContent === "0" ? stringValue : windowContent + stringValue;
-  } else if (e.keyCode == 46 || e.keyCode == 8) {
-    windowContent = "0";
-  }
-  calculatorWindow.textContent = windowContent;
+  console.log(e.key);
+  buttonPress(e.key);
 }
