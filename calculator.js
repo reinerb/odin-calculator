@@ -1,11 +1,13 @@
 const calculatorWindow = document.querySelector(".calculator-window");
+const MAX_SIG_FIGS = 12;
 
 // Initializing the window
-let windowContent = "0";
-let firstOperand = "";
-let secondOperand = "";
+let displayValue = "0";
+let lastDisplayValue = "";
 let operator = "";
-calculatorWindow.textContent = windowContent;
+let currentDisplayValue;
+let windowReset = false;
+calculatorWindow.textContent = displayValue;
 
 // Operates a . b
 const add = function (a, b) {
@@ -42,51 +44,73 @@ const calculate = function (a, b, operation) {
       result = divide(a, b);
   }
 
+  console.log(result);
+
   return String(result);
 };
 
 // Processing button presses
-function buttonPress(value) {
+const buttonPress = function (value) {
   // Reset when clear is pressed
   if (value === "Delete" || value === "Backspace") {
-    windowContent = "0";
-    firstOperand = "";
-    secondOperand = "";
+    displayValue = "0";
+    lastDisplayValue = "";
     operator = "";
-    calculatorWindow.textContent = windowContent;
+    windowReset = false;
+    calculatorWindow.textContent = displayValue;
     return;
   }
 
   // If there is an error, do nothing until cleared
-  if (windowContent === "ERROR") {
+  if (displayValue === "ERROR") {
     return;
   }
 
   // If the input is a number, append it to the window content.
   // Replace leading zeros, if any.
   if (value == "0") {
-    windowContent = windowContent === "0" ? "0" : windowContent + "0";
+    displayValue =
+      displayValue === "0" || windowReset ? "0" : displayValue + "0";
+    windowReset = false;
   } else if (value >= 1 && value <= 9) {
-    windowContent = windowContent === "0" ? value : windowContent + value;
+    displayValue =
+      displayValue === "0" || windowReset ? value : displayValue + value;
+    windowReset = false;
   }
   // If it's an operator, set up to perform an operation.
   else if (value === "+" || value === "-" || value === "*" || value === "/") {
-    return;
+    if (lastDisplayValue === "" && operator === "") {
+      lastDisplayValue = displayValue;
+      operator = value;
+      windowReset = true;
+    } else if (operator === "") {
+      operator = value;
+      windowReset = true;
+    } else {
+      currentDisplayValue = displayValue;
+      displayValue = calculate(lastDisplayValue, displayValue, operator);
+      lastDisplayValue = displayValue;
+      operator = value;
+      windowReset = true;
+    }
   }
   // If equals is pressed, perform an operation if possible.
   else if (value === "Enter") {
-    if (firstOperand !== "" && secondOperand !== "" && operator !== "") {
-      calculate(firstOperand, secondOperand, operator);
+    if (lastDisplayValue !== "" && operator !== "") {
+      displayValue = calculate(lastDisplayValue, displayValue, operator);
+      lastDisplayValue = displayValue;
+      operator = "";
+      windowReset = true;
     }
   }
 
-  calculatorWindow.textContent = windowContent;
-}
+  calculatorWindow.textContent = displayValue;
+};
 
 // Accepting keypresses
-window.addEventListener("keydown", onKeyDown, true);
-
-function onKeyDown(e) {
+const onKeyDown = function (e) {
   console.log(e.key);
   buttonPress(e.key);
-}
+};
+
+window.addEventListener("keydown", onKeyDown, true);
