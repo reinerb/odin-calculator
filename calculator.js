@@ -1,5 +1,25 @@
 const calculatorWindow = document.querySelector(".calculator-window");
 const MAX_SIG_FIGS = 12;
+const BUTTONS = [
+  "0",
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+  "+",
+  "-",
+  "*",
+  "/",
+  "Enter",
+  "Backspace",
+  "Delete",
+  ".",
+];
 
 // Initializing the window
 let displayValue = "0";
@@ -108,9 +128,85 @@ const buttonPress = function (value) {
 };
 
 // Accepting keypresses
+
+// Finding the correct button for the given key
+const findButton = function (key) {
+  let className = `.btn-${key}`;
+  return document.querySelector(className);
+};
+
 const onKeyDown = function (e) {
-  console.log(e.key);
-  buttonPress(e.key);
+  key = e.key;
+  let button;
+  if (BUTTONS.indexOf(key) !== -1) {
+    if (key >= 0 && key <= 9) {
+      button = findButton(key);
+    } else {
+      switch (key) {
+        case "Delete":
+        case "Backspace":
+          button = findButton("clear");
+          break;
+        case "+":
+          button = findButton("plus");
+          break;
+        case "-":
+          button = findButton("minus");
+          break;
+        case "*":
+          button = findButton("times");
+          break;
+        case "/":
+          button = findButton("divide");
+          break;
+        case "Enter":
+          button = findButton("equals");
+          break;
+        case ".":
+          button = findButton("decimal");
+          break;
+      }
+    }
+  }
+  if (button) button.classList.add("btn-pressed");
+  buttonPress(key);
+};
+
+const onKeyUp = function (e) {
+  key = e.key;
+  let button;
+  if (BUTTONS.indexOf(key) !== -1) {
+    if (key >= 0 && key <= 9) {
+      button = findButton(key);
+    } else {
+      switch (key) {
+        case "Delete":
+        case "Backspace":
+          button = findButton("clear");
+          break;
+        case "+":
+          button = findButton("plus");
+          break;
+        case "-":
+          button = findButton("minus");
+          break;
+        case "*":
+          button = findButton("times");
+          break;
+        case "/":
+          button = findButton("divide");
+          break;
+        case "Enter":
+          button = findButton("equals");
+          break;
+        case ".":
+          button = findButton("decimal");
+          break;
+      }
+    }
+  }
+  if (button) button.classList.remove("btn-pressed");
 };
 
 window.addEventListener("keydown", onKeyDown, true);
+window.addEventListener("keyup", onKeyUp, true);

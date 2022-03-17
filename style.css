@@ -66,11 +66,6 @@ select {
   background-color: #161616;
 }
 
-.btn:active {
-  background-color: limegreen;
-  color: black;
-}
-
 .btn-clear,
 .btn-divide,
 .btn-times,
@@ -97,7 +92,7 @@ select {
   grid-row: 5 / span 2;
 }
 
-.btn-zero {
+.btn-0 {
   grid-column: 1 / span 2;
   grid-row: 6;
 }
@@ -105,4 +100,10 @@ select {
 .btn-decimal {
   grid-column: 3;
   grid-row: 6;
+}
+
+.btn:active,
+.btn-pressed {
+  background-color: limegreen;
+  color: black;
 }
